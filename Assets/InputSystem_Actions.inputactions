@@ -17,7 +17,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "Look",
+                    "name": "Regarder",
                     "type": "Value",
                     "id": "6b444451-8a00-4d00-a97e-f47457f736a8",
                     "expectedControlType": "Vector2",
@@ -57,10 +57,10 @@
                     "priority": 0
                 },
                 {
-                    "name": "Jump",
+                    "name": "Sauter",
                     "type": "Button",
                     "id": "f1ba0d36-48eb-4cd5-b651-1c94a6531f70",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false,
@@ -237,7 +237,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Look",
+                    "action": "Regarder",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -248,7 +248,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse;Touch",
-                    "action": "Look",
+                    "action": "Regarder",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -259,7 +259,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
-                    "action": "Look",
+                    "action": "Regarder",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -391,7 +391,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Jump",
+                    "action": "Sauter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -402,7 +402,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Jump",
+                    "action": "Sauter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -413,7 +413,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Jump",
+                    "action": "Sauter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
