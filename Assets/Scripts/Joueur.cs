@@ -59,6 +59,11 @@ public class Joueur : MonoBehaviour
     [SerializeField, Tooltip("Masque du sol")]
     private LayerMask sol;
 
+    /// <summary>
+    /// Garde la position initial du joueur
+    /// </summary>
+    private Vector3 positionInitiale;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -73,6 +78,9 @@ public class Joueur : MonoBehaviour
         controles.actions.FindAction("Regarder").performed += CommencerRegarder;
         controles.actions.FindAction("Regarder").canceled += ArreterRegarder;
         Cursor.lockState = CursorLockMode.Locked;
+
+        positionInitiale = transform.position;
+        DetecteurVide.Instance.OnTomberVide += Reinitialiser;
     }
 
     // Update is called once per frame
@@ -187,10 +195,17 @@ public class Joueur : MonoBehaviour
     {
         if (Physics.BoxCast(transform.position + Vector3.up * 0.4f, new Vector3(0.5f, 0.2f, 0.5f), Vector3.down, transform.rotation, 0.2f, sol))
         {
-            Debug.Log("Au sol");
             return false;
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Réinitialise le joueur à la position de départ
+    /// </summary>
+    private void Reinitialiser()
+    {
+        rb.position = positionInitiale;
     }
 }

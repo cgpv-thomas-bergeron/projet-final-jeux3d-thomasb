@@ -14,7 +14,7 @@ public class Plateforme : MonoBehaviour
     /// <summary>
     /// Évenement lorsque le joueur entre en contact avec la plateforme
     /// </summary>
-    public event Action collisionJoueur;
+    public event Action OnCollisionJoueur;
 
     /// <summary>
     /// Gère les collision avec la plateforme
@@ -24,7 +24,7 @@ public class Plateforme : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out Joueur joueur) && !contact)
         {
-            collisionJoueur?.Invoke();
+            OnCollisionJoueur?.Invoke();
             contact = true;
         }
     }

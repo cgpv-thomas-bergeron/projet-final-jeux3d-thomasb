@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -26,6 +27,11 @@ public class GestionnairePlateforme : MonoBehaviour
     /// </summary>
     private Plateforme plateformePrecedente;
 
+    /// <summary>
+    /// Évenement qui s'encleche lorsque le joueur touche à une plateforme 
+    /// </summary>
+    public event Action OnPlateformeTouchee;
+
     private void Awake()
     {
         if (Instance == null)
@@ -41,6 +47,7 @@ public class GestionnairePlateforme : MonoBehaviour
     private void Start()
     {
         Initialiser();
+        DetecteurVide.Instance.OnTomberVide += Reinitialiser;
     }
 
     /// <summary>
@@ -49,9 +56,9 @@ public class GestionnairePlateforme : MonoBehaviour
     public void AjouterPlateforme()
     {
         // Direction dans laquelle la prochaine plateforme va être générée
-        Vector2 directionAleatoire = Random.insideUnitCircle.normalized;
+        Vector2 directionAleatoire = UnityEngine.Random.insideUnitCircle.normalized;
         // Distance à laquelle la prochaine plateforme va être généré
-        float distanceAleatoire = Random.Range(distanceMin, distanceMax);
+        float distanceAleatoire = UnityEngine.Random.Range(distanceMin, distanceMax);
         // Position de la prochaine plateforme
         Vector3 nouvellePosition = plateformeActuelle.transform.position + new Vector3(directionAleatoire.x * distanceAleatoire, 1, directionAleatoire.y * distanceAleatoire);
 
@@ -60,15 +67,17 @@ public class GestionnairePlateforme : MonoBehaviour
         // Supression de la plateforme précédente
         if (plateformePrecedente != null)
         {
-            plateformePrecedente.collisionJoueur -= AjouterPlateforme;
-            PoolPlateforme.Instance.RecupererPlateforme(plateformePrecedente);
+            SupprimerPlateforme(plateformePrecedente);
         }
 
         plateformePrecedente = plateformeActuelle;
 
+        DetecteurVide.Instance.transform.position = plateformePrecedente.transform.position - new Vector3(0, 2, 0);
+
         nouvellePlateforme.transform.position = nouvellePosition;
         nouvellePlateforme.MettreContactFalse();
-        nouvellePlateforme.collisionJoueur += AjouterPlateforme;
+        nouvellePlateforme.OnCollisionJoueur += AjouterPlateforme;
+        nouvellePlateforme.OnCollisionJoueur += RelayerContact;
         plateformeActuelle = nouvellePlateforme;
     }
 
@@ -79,7 +88,43 @@ public class GestionnairePlateforme : MonoBehaviour
     {
         Plateforme nouvellePlateforme = PoolPlateforme.Instance.GetPlateforme();
         nouvellePlateforme.transform.position = new Vector3(0, 0, 0);
-        nouvellePlateforme.collisionJoueur += AjouterPlateforme;
+        nouvellePlateforme.OnCollisionJoueur += AjouterPlateforme;
         plateformeActuelle = nouvellePlateforme;
+    }
+
+    /// <summary>
+    /// Relaye l'évenement à celui du gestionnaire de plateforme
+    /// </summary>
+    private void RelayerContact()
+    {
+        OnPlateformeTouchee?.Invoke();
+    }
+
+    /// <summary>
+    /// Réinitialise les plateformes pour recommencer
+    /// </summary>
+    private void Reinitialiser()
+    {
+        SupprimerPlateforme(plateformeActuelle);
+        SupprimerPlateforme(plateformePrecedente);
+        plateformeActuelle = null;
+        plateformePrecedente = null;
+
+        DetecteurVide.Instance.transform.position = new Vector3(0, -5, 0);
+
+        Initialiser();
+    }
+
+    /// <summary>
+    /// Supprime la plateforme du monde en désabonnant les évenements
+    /// </summary>
+    /// <param name="plateforme">La plateforme à supprimer</param>
+    private void SupprimerPlateforme(Plateforme plateforme)
+    {
+        if (plateforme == null) return;
+
+        plateforme.OnCollisionJoueur -= AjouterPlateforme;
+        plateforme.OnCollisionJoueur -= RelayerContact;
+        PoolPlateforme.Instance.RecupererPlateforme(plateforme);    
     }
 }
